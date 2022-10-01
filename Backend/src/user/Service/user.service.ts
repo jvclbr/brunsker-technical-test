@@ -1,0 +1,239 @@
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { UserEntity } from '../Entity';
+import {
+    UserDTO,
+    CreateUserDTO,
+    UpdateUserDTO
+} from '../DTO';
+import {
+    FeedbackResponse,
+    ActionsEnum,
+    StatusEnum,
+    CheckAccessPermissionOnObject, 
+} from '../../utils';
+
+@Injectable()
+export class UserService {
+    constructor(
+        @InjectRepository(UserEntity)
+        private readonly userRepository: Repository<UserEntity>,
+    ) {}
+
+    public async getAllUsers(): Promise<UserDTO[]>{
+        try{
+            const UsersList = await this.userRepository.find();
+            return UsersList 
+        }
+        catch(err){
+            throw err
+        }
+    }
+
+    public async createNewUser(userToCreate: CreateUserDTO): Promise<UserDTO>{
+        try{
+            const DuplicateEmailCOunt = await this.userRepository.count({
+                where: [
+                    {
+                        email: userToCreate.email
+                    }
+                ]
+            })
+
+            if(DuplicateEmailCOunt){
+                throw new HttpException(`Já existe um usuario cadastrado com o email'${userToCreate.email}'`, HttpStatus.BAD_REQUEST)
+            }
+
+            const NewUser = await this.userRepository.save(userToCreate);
+            delete NewUser.password;
+            return NewUser
+        }
+        catch(err){
+            throw err
+        }
+    }
+
+    public async getUserByIdProtected(userId: number, req){
+        try{
+            const FoundedUser = await this.userRepository.findOne({
+                where: {
+                    id: userId
+                }
+            })
+
+            if(!FoundedUser){
+                throw new HttpException('Usuário não encontrado', HttpStatus.NOT_FOUND)
+            }
+
+            CheckAccessPermissionOnObject(FoundedUser.id, req);
+
+            return FoundedUser
+        }
+        catch(err){
+            throw err
+        }
+    }
+
+    public async getUserById(userId: number, showPassword: boolean = false): Promise<UserDTO>{
+        try{
+            const FoundedUser = await this.userRepository.findOne(
+                showPassword ? {
+                    
+                    select: [
+                        'id',
+                        'name',
+                        'email',
+                        'password',
+                        'active'
+                    ],
+                    where: {
+                        id: userId
+                    }
+
+                } : {
+
+                    where: {
+                        id: userId
+                    }
+                    
+                }
+            );
+
+            if(!FoundedUser){
+                throw new HttpException('Usuário não encontrado', HttpStatus.NOT_FOUND)
+            }
+            
+            return FoundedUser 
+        }
+        catch(err){
+            throw err
+        }
+    }
+
+    public async getUserByEmail(userEmail: string, showPassword: boolean = false): Promise<UserDTO>{
+        try{
+            const FoundedUser = await this.userRepository.findOne(
+                showPassword ? {
+                    
+                    select: [
+                        'id',
+                        'name',
+                        'email',
+                        'password',
+                        'active'
+                    ],
+                    where: {
+                        email: userEmail
+                    }
+
+                } : {
+
+                    where: {
+                        email: userEmail
+                    }
+                    
+                }    
+            );
+
+            if(!FoundedUser){
+                throw new HttpException('Usuário não encontrado', HttpStatus.NOT_FOUND)
+            }
+
+            return FoundedUser 
+        }
+        catch(err){
+            throw err
+        }
+    }
+
+    
+    public async updateUserByid(userId: number, userToUpdate: UpdateUserDTO, req: any): Promise<FeedbackResponse>{
+        try{
+            const FoundedUser = await this.getUserByIdProtected(userId, req);
+            await this.userRepository.update(userId, userToUpdate);
+            const UpdateResponse: FeedbackResponse = {
+                action: ActionsEnum.UPDATE,
+                status: StatusEnum.SUCCESS,
+                message: `Usuário '${userToUpdate.name || FoundedUser.name}' alterado com sucesso`
+            }
+            return UpdateResponse
+        }
+        catch(err){
+
+            const UpdateResponse: FeedbackResponse = {
+                action: ActionsEnum.UPDATE,
+                status: StatusEnum.ERROR,
+                message: err.message
+            }
+
+            if(err instanceof HttpException){
+                throw new HttpException(UpdateResponse, err.getStatus())
+            }
+
+            throw new HttpException(UpdateResponse, HttpStatus.BAD_REQUEST)
+        }
+    }
+
+    public async deactivateUserById(userId: number, req: any): Promise<FeedbackResponse>{
+        try{
+            const FoundedUser = await this.getUserByIdProtected(userId, req);
+            if(!FoundedUser.active){
+                throw new HttpException(`Usuário '${FoundedUser.name}' já esta desativado`, HttpStatus.BAD_REQUEST)
+            }
+            await this.userRepository.update(userId, { ...FoundedUser, active: false });
+            const DeactivateResponse: FeedbackResponse = {
+                action: ActionsEnum.DEACTIVATE,
+                status: StatusEnum.SUCCESS,
+                message: `Usuário '${FoundedUser.name}' desativado com sucesso`
+            }
+
+            return DeactivateResponse
+ 
+        }
+        catch(err){
+            const DeactivateResponse: FeedbackResponse = {
+                action: ActionsEnum.DEACTIVATE,
+                status: StatusEnum.ERROR,
+                message: err.message
+            }
+
+            if(err instanceof HttpException){
+                throw new HttpException(DeactivateResponse, err.getStatus())
+            }
+
+            throw new HttpException(DeactivateResponse, HttpStatus.BAD_REQUEST)        
+        }
+    }
+
+    public async activateUserById(userId: number, req: any): Promise<FeedbackResponse>{
+        try{
+            const FoundedUser = await this.getUserByIdProtected(userId, req);
+            if(FoundedUser.active){
+                throw new HttpException(`Usuário '${FoundedUser.name}' já esta ativado`, HttpStatus.BAD_REQUEST)
+            }
+            await this.userRepository.update(userId, { ...FoundedUser, active: true });
+            const ActivateResponse: FeedbackResponse = {
+                action: ActionsEnum.ACTIVATE,
+                status: StatusEnum.SUCCESS,
+                message: `Usuário '${FoundedUser.name}' ativado com sucesso`
+            }
+
+            return ActivateResponse
+ 
+        }
+        catch(err){
+            const ActivateResponse: FeedbackResponse = {
+                action: ActionsEnum.DEACTIVATE,
+                status: StatusEnum.ERROR,
+                message: err.message
+            }
+
+            if(err instanceof HttpException){
+                throw new HttpException(ActivateResponse, err.getStatus())
+            }
+
+            throw new HttpException(ActivateResponse, HttpStatus.BAD_REQUEST)        
+        }
+    }
+}
