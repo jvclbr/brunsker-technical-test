@@ -13,7 +13,10 @@ import {
     JWTPayloadDTO
 } from '../DTO';
 import { UserService, UserDTO } from '../../user';
-import { ComparePassword } from '../../utils'
+import {
+    ComparePassword,
+    FixLazyLoadingProps
+} from '../../utils'
 
 @Injectable()
 export class AuthService {
@@ -79,8 +82,14 @@ export class AuthService {
     }
 
     private async generateJWT(currentUser: UserDTO): Promise<JWTLoginResponseDTO>{
+        const UserRoles = (await currentUser.roles)?.filter(role => role.active) ?? [];
+
+        FixLazyLoadingProps(currentUser);
+        delete currentUser.__roles__;
+
         const JWTPayload: JWTPayloadDTO = {
-            user: currentUser
+            user: currentUser,
+            roles: UserRoles,
         }
 
         const AuthToken = this.jwtService.sign(JWTPayload);

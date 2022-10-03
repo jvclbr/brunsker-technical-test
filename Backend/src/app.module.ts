@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { InterceptorModule } from './interceptor';
 import { UserModule } from './user';
 import { AuthModule } from './auth';
+import { IndicatorModule } from './indicator';
 
 @Module({
   imports: [
@@ -33,7 +34,8 @@ import { AuthModule } from './auth';
     }),
     InterceptorModule,
     UserModule,
-    AuthModule
+    AuthModule,
+    IndicatorModule
   ],
   controllers: [AppController],
   providers: [AppService],

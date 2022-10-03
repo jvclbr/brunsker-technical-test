@@ -18,7 +18,12 @@ import {
     UserParamsDTO
 } from '../DTO';
 import { FeedbackResponse } from '../../utils';
-import { JwtAuthGuard } from '../../auth/Guards';
+import {
+    JwtAuthGuard,
+    RolesGuard
+} from '../../auth/Guards';
+import { Roles } from '../../auth/Decorators';
+import { RolesEnum } from '../../auth/Enums';
 import {
     ApiBearerAuth,
     ApiTags
@@ -42,7 +47,22 @@ export class UserController {
     }
 
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RolesEnum.ADMIN)
+    @Get()
+    async getAllUsers(): Promise<UserDTO[]>{
+        try{
+            const Response = await this.userService.getAllUsers();
+            return Response
+        }
+        catch(err){
+            throw err
+        }
+    }
+
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RolesEnum.ADMIN, RolesEnum.CLIENT)
     @Get(':id')
     async getUserById(@Param() userParams: UserParamsDTO, @Request() req): Promise<UserDTO>{
         try{
@@ -55,7 +75,8 @@ export class UserController {
     }
 
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RolesEnum.ADMIN, RolesEnum.CLIENT)
     @Put(':id')
     async updateUserById(@Param() userParams: UserParamsDTO, @Body() userToUpdate: UpdateUserDTO, @Request() req): Promise<FeedbackResponse>{
         try{
@@ -71,7 +92,8 @@ export class UserController {
     }
 
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RolesEnum.ADMIN)
     @Put('deactivate/:id')
     async deactivateUserById(@Param() userParams: UserParamsDTO, @Request() req): Promise<FeedbackResponse>{
         try{
@@ -84,7 +106,8 @@ export class UserController {
     }
 
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RolesEnum.ADMIN)
     @Put('activate/:id')
     async activateUserById(@Param() userParams: UserParamsDTO, @Request() req): Promise<FeedbackResponse>{
         try{
