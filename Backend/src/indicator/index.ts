@@ -1,3 +1,4 @@
 export * from './Module';
-export * from './Guards';
+export * from './DTO';
+export * from './Entities';
 export * from './Enums';

@@ -1,5 +1,6 @@
 const dotenv = require('dotenv');
 const bcrypt = require('bcrypt');
+const dbConstants = require('../../db.constants');
 
 dotenv.config();
 
@@ -22,6 +23,11 @@ class UserSeed {
         await this._connectionRef.query(`
             INSERT OR IGNORE INTO user_entity (name, email, password, active)
             VALUES ('${process.env.ADMIN_NAME}', '${process.env.ADMIN_EMAIL}', '${AdminUserPassword}', 1)
+        `)
+
+        await this._connectionRef.query(`
+            INSERT OR IGNORE INTO users_roles_entity (userEntityId, roleEntityId)
+            VALUES (1, ${dbConstants.indicators.role.ADMIN_ROLE})
         `)
     }
 

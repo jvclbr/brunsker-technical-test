@@ -11,14 +11,21 @@ import {
     FeedbackResponse,
     ActionsEnum,
     StatusEnum,
-    CheckAccessPermissionOnObject, 
+    CheckAccessPermissionOnObject,
+    FixLazyLoadingProps, 
 } from '../../utils';
+import { IndicatorEntity, IndicatorTypesEnum } from '../../indicator';
+import { RolesEnum } from '../../auth';
+
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(UserEntity)
         private readonly userRepository: Repository<UserEntity>,
+
+        @InjectRepository(IndicatorEntity)
+        private readonly indicatorRepository: Repository<IndicatorEntity>,
     ) {}
 
     public async getAllUsers(): Promise<UserDTO[]>{
@@ -33,6 +40,22 @@ export class UserService {
 
     public async createNewUser(userToCreate: CreateUserDTO): Promise<UserDTO>{
         try{
+
+            const UserRole = await this.indicatorRepository.findOne({
+                where:{
+                    id: RolesEnum.CLIENT,
+                    indicatorType: IndicatorTypesEnum.ROLE
+                }
+            })
+
+            if(!UserRole){
+                throw new HttpException(`Cargo com o id ${RolesEnum.CLIENT} não foi encontrado`, HttpStatus.NOT_FOUND)
+            }
+
+            if(!UserRole.active){
+                throw new HttpException(`Cargo "${UserRole.value}" esta desativado`, HttpStatus.BAD_REQUEST)
+            }
+
             const DuplicateEmailCOunt = await this.userRepository.count({
                 where: [
                     {
@@ -45,8 +68,19 @@ export class UserService {
                 throw new HttpException(`Já existe um usuario cadastrado com o email'${userToCreate.email}'`, HttpStatus.BAD_REQUEST)
             }
 
-            const NewUser = await this.userRepository.save(userToCreate);
+            const NewUserEntity = new UserEntity();
+
+            Object.keys(userToCreate).forEach(key => {
+                NewUserEntity[key] = userToCreate[key]
+            });
+
+            NewUserEntity.roles = Promise.resolve([
+                UserRole as IndicatorEntity
+            ])
+
+            const NewUser = await this.userRepository.save(NewUserEntity);
             delete NewUser.password;
+            FixLazyLoadingProps(NewUser);
             return NewUser
         }
         catch(err){
@@ -236,4 +270,5 @@ export class UserService {
             throw new HttpException(ActivateResponse, HttpStatus.BAD_REQUEST)        
         }
     }
+
 }

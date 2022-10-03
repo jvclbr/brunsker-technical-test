@@ -6,10 +6,12 @@ import {
     EntitySubscriberInterface,
     Connection,
     InsertEvent,
-    UpdateEvent
+    UpdateEvent,
+    ManyToMany,
+    JoinTable
 } from 'typeorm';
 
-
+import { IndicatorEntity } from '../../indicator/Entities/indicators.entity';
 import { HashPassword } from '../../utils/Services'
 
 @Entity()
@@ -30,6 +32,14 @@ export class UserEntity {
   @Column({ default: true })
   active: boolean;
 
+  @ManyToMany(() => IndicatorEntity)
+  @JoinTable({
+    name: 'users_roles_entity',
+    inverseJoinColumn: {
+      name: 'roleEntityId',
+    },
+  })
+  roles: Promise<IndicatorEntity[]>;
 }
 
 @EventSubscriber()
