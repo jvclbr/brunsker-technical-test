@@ -19,7 +19,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       const FoundedUser = await this.authService.validateUser({ email, password });
       return FoundedUser
     }
-    catch(err){
+    catch(err: any){
 
       const ErrorData = typeof err.getResponse() === 'string' ? { message: err.getResponse() } : err.getResponse();
 

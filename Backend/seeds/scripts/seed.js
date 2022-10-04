@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const IndicatorTypeSeed = require('./indicatorType.seed').IndicatorTypeSeed;
 const IndicatorSeed = require('./indicator.seed').IndicatorSeed;
 const UserSeed = require('./user.seed').UserSeed;
+const AddressSeed = require('./address.seed').AddressSeed;
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ createConnection({
     await new IndicatorTypeSeed(connection).execIndicatorTypeSeeds();
     await new IndicatorSeed(connection).execIndicatorSeeds();
     await new UserSeed(connection).execUserSeeds();
+    await new AddressSeed(connection).execAddressSeeds();
     process.exit(0);
 }).catch(err => {
     console.log(err)

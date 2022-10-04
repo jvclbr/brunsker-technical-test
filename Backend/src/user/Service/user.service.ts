@@ -193,7 +193,7 @@ export class UserService {
             }
             return UpdateResponse
         }
-        catch(err){
+        catch(err: any){
 
             const UpdateResponse: FeedbackResponse = {
                 action: ActionsEnum.UPDATE,
@@ -225,7 +225,7 @@ export class UserService {
             return DeactivateResponse
  
         }
-        catch(err){
+        catch(err: any){
             const DeactivateResponse: FeedbackResponse = {
                 action: ActionsEnum.DEACTIVATE,
                 status: StatusEnum.ERROR,
@@ -256,7 +256,7 @@ export class UserService {
             return ActivateResponse
  
         }
-        catch(err){
+        catch(err: any){
             const ActivateResponse: FeedbackResponse = {
                 action: ActionsEnum.DEACTIVATE,
                 status: StatusEnum.ERROR,
