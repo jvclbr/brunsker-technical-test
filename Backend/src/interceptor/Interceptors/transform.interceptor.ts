@@ -47,7 +47,7 @@ export class TransformInterceptor<T> implements NestInterceptor<T, DefaultRespon
         return Response
 
       }),
-      catchError(err => {
+      catchError((err: any) => {
           
         let errorData
 

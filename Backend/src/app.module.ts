@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { InterceptorModule } from './interceptor';
 import { UserModule } from './user';
 import { AuthModule } from './auth';
+import { AddressModule } from './address';
 import { IndicatorModule } from './indicator';
 
 @Module({
@@ -15,8 +16,8 @@ import { IndicatorModule } from './indicator';
       isGlobal: true,
     }),
     CacheModule.registerAsync({
+      isGlobal: true,
       useFactory: async (configService: ConfigService) => ({
-        isGlobal: true,
         ttl: Number(configService.get<number>('CACHE_TTL')),
         max: Number(configService.get<number>('MAX_CACHE'))
       }),
@@ -35,6 +36,7 @@ import { IndicatorModule } from './indicator';
     InterceptorModule,
     UserModule,
     AuthModule,
+    AddressModule,
     IndicatorModule
   ],
   controllers: [AppController],

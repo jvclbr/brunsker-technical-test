@@ -29,4 +29,17 @@ export class IndicatorEntity {
   )
   indicatorType: Promise<IndicatorTypeEntity>;
 
+  
+  @ManyToMany(() => IndicatorEntity, indicator => indicator.ufLocalities)
+  @JoinTable({ 
+    name: 'ufs_localities_entity',
+    joinColumn: {
+      name: 'ufId',
+    },
+    inverseJoinColumn: {
+      name: 'localityId',
+    },
+  })
+  ufLocalities: Promise<IndicatorEntity[]>;
+
 }
