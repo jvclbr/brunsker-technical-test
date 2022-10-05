@@ -35,7 +35,7 @@ export class IndicatorDTO{
     @IsObject()
     @ValidateNested()
     @Type(() => IndicatorTypeDTO)
-    indicatorType ?: Promise<IndicatorTypeDTO>;
+    indicatorType: Promise<IndicatorTypeDTO>;
 
     @ApiHideProperty()
     @IsOptional()
@@ -43,6 +43,20 @@ export class IndicatorDTO{
     @ValidateNested()
     @Type(() => IndicatorTypeDTO)
     __indicatorType__ ?: IndicatorTypeDTO[];
+
+    @ApiHideProperty()
+    @IsOptional()
+    @IsObject()
+    @ValidateNested()
+    @Type(() => IndicatorDTO)
+    ufLocalities: Promise<IndicatorDTO[]>;
+
+    @ApiHideProperty()
+    @IsOptional()
+    @IsObject()
+    @ValidateNested()
+    @Type(() => IndicatorDTO)
+    __ufLocalities__ ?: IndicatorDTO;
 }
 
 export class RoleDTO extends IndicatorDTO {}

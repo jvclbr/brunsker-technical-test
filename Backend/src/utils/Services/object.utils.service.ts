@@ -12,7 +12,7 @@ export const CheckAccessPermissionOnObject = (objectOwner: number, req): void =>
 
 export const FixLazyLoadingProps = (target: Object): Object => {
     Object.keys(target).forEach(key => {
-        if(key.substring(0,2) === '__' && key.includes('has')){
+        if(key.substring(0,2) === '__'){
             delete target[key];
         }
     })

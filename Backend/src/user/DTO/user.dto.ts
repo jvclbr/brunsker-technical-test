@@ -11,8 +11,8 @@ import {
     ValidateNested,
     IsArray,
 } from 'class-validator';
-import { RoleDTO } from './../../indicator';
-
+import { RoleDTO } from '../../indicator';
+import { RealEstateDTO } from '../../real-estate';
 export class UserDTO{
     
     @IsNotEmpty()
@@ -47,6 +47,20 @@ export class UserDTO{
     @ValidateNested()
     @Type(() => RoleDTO)
     __roles__ ?: RoleDTO[];
+
+    @ApiHideProperty()
+    @IsOptional()
+    @IsArray()
+    @ValidateNested()
+    @Type(() => RealEstateDTO)
+    favList : Promise<RealEstateDTO[]>;
+
+    @ApiHideProperty()
+    @IsOptional()
+    @IsArray()
+    @ValidateNested()
+    @Type(() => RealEstateDTO)
+    __favList__ ?: RealEstateDTO[];
 }
 
 export class CreateUserDTO{

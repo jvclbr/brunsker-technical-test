@@ -85,7 +85,6 @@ export class AuthService {
         const UserRoles = (await currentUser.roles)?.filter(role => role.active) ?? [];
 
         FixLazyLoadingProps(currentUser);
-        delete currentUser.__roles__;
 
         const JWTPayload: JWTPayloadDTO = {
             user: currentUser,

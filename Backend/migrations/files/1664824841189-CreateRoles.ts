@@ -4,7 +4,7 @@ export class CreateRoles1664824841189 implements MigrationInterface {
     name = 'CreateRoles1664824841189'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`CREATE TABLE "indicator_type_entity" ("id" integer PRIMARY KEY NOT NULL, "type" varchar NOT NULL, "description" varchar NOT NULL, "isEnum" boolean NOT NULL DEFAULT (1), "active" boolean NOT NULL DEFAULT (1))`);
+        await queryRunner.query(`CREATE TABLE "indicator_type_entity" ("id" integer PRIMARY KEY NOT NULL, "type" varchar NOT NULL, "description" varchar NOT NULL, "active" boolean NOT NULL DEFAULT (1))`);
         await queryRunner.query(`CREATE TABLE "indicator_entity" ("id" integer PRIMARY KEY NOT NULL, "value" varchar NOT NULL, "description" varchar NOT NULL, "active" boolean NOT NULL DEFAULT (1), "indicatorTypeId" integer)`);
         await queryRunner.query(`CREATE TABLE "users_roles_entity" ("userEntityId" integer NOT NULL, "roleEntityId" integer NOT NULL, PRIMARY KEY ("userEntityId", "roleEntityId"))`);
         await queryRunner.query(`CREATE INDEX "IDX_0d60521e1cecf4bd669ebc8538" ON "users_roles_entity" ("userEntityId") `);
