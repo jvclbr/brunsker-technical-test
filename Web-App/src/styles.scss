@@ -1,1 +1,32 @@
-/* You can add global styles to this file, and also import other style files */
+@import './assets/theme/brunsker.theme';
+
+body {
+  margin: 0px;
+  background: #fcfcfc;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.transparent .mat-dialog-container {
+box-shadow: none;
+background: rgba(0, 0, 0, 0);
+}
+
+.mat-snack-bar-container .flex {
+display: flex;
+align-items: center;
+justify-content: space-between;
+text-transform: uppercase;
+padding: 0;
+}
+
+.mat-snack-bar-container.danger {
+color: white;
+background-color: var(--danger);
+}
+
+.mat-snack-bar-container.warning {
+color: white;
+background-color: var(--warning);
+}

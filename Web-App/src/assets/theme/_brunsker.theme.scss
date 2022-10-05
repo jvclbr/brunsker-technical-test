@@ -1,0 +1,66 @@
+@use '../../../node_modules/@angular/material' as mat;
+@include mat.core();
+
+$md-brunsker: (
+    50 : #f1f9fe,
+    100 : #dbf0fe,
+    200 : #c3e7fd,
+    300 : #abddfc,
+    400 : #99d5fb,
+    500 : #87cefa,
+    600 : #7fc9f9,
+    700 : #74c2f9,
+    800 : #6abcf8,
+    900 : #57b0f6,
+    A100 : #ffffff,
+    A200 : #ffffff,
+    A400 : #f3faff,
+    A700 : #daeeff,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #000000,
+        500 : #000000,
+        600 : #000000,
+        700 : #000000,
+        800 : #000000,
+        900 : #000000,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
+    )
+);
+
+$brunsker-primary: mat.define-palette($md-brunsker);
+$brunsker-accent: mat.define-palette($md-brunsker, A200, A100, A400);
+$brunsker-warn: mat.define-palette(mat.$red-palette);
+
+$brunsker-theme: mat.define-light-theme((
+  color: (
+    primary: $brunsker-primary,
+    accent: $brunsker-accent,
+    warn: $brunsker-warn,
+  )
+));
+
+:root{
+  --primary-color: #87CEFA;
+  --accent-color: #F3FAFF;
+  --warn-color: #F44336;
+  --main-bg-color: #FFFFFF;
+  --success: #2D884D;
+  --warning: #ABB33B;
+  --danger: #B34045;
+  --item-color: rgba(255,255,255, 0.3);
+  --item-card-color: rgba(125, 125, 125, 0.5);
+  --fade-in-time: 200ms;
+  --spin-time: 500ms;
+  --transition-time: 1000ms;
+  --item-container-hover-color: rgba(0,0,0, 0.1);
+  --toolbar-size: 80px;
+}
+
+@include mat.all-component-themes($brunsker-theme);
