@@ -65,7 +65,7 @@ export class UserService {
             })
 
             if(DuplicateEmailCOunt){
-                throw new HttpException(`Já existe um usuario cadastrado com o email'${userToCreate.email}'`, HttpStatus.BAD_REQUEST)
+                throw new HttpException(`Já existe um usuario cadastrado com o email '${userToCreate.email}'`, HttpStatus.BAD_REQUEST)
             }
 
             const NewUserEntity = new UserEntity();

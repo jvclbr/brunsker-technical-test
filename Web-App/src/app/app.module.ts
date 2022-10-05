@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -10,6 +11,7 @@ import { InterceptorsModule, LayoutModule } from './@core';
 
 const Modules = [
   BrowserModule,
+  HttpClientModule,
   AppRoutingModule,
   BrowserAnimationsModule,
   InterceptorsModule,
