@@ -6,26 +6,22 @@ import { RealEstateModule } from './real-estate';
 
 const routes: Routes = [
   {
-    path: RouteNamesEnum.BASE,
-    component: MainLayoutComponent,
-    children:[
-      {
-        path: RouteNamesEnum.REAL_ESTATE,
-        loadChildren: () => RealEstateModule
-      },
-      {
-        path: '**',
-        redirectTo: RouteNamesEnum.REAL_ESTATE
-      }
-    ]
-  },
-  {
     path: RouteNamesEnum.AUTH,
     loadChildren: () => AuthModule
   },
   {
+    path: RouteNamesEnum.REAL_ESTATE,
+    component: MainLayoutComponent,
+    children: [
+      {
+        path: RouteNamesEnum.BASE,
+        loadChildren: () => RealEstateModule
+      }
+    ]
+  },
+  {
     path: '**',
-    redirectTo: RouteNamesEnum.BASE
+    redirectTo: RouteNamesEnum.REAL_ESTATE
   }
 ];
 
