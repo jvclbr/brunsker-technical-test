@@ -1,0 +1,25 @@
+.header{
+
+  h1{
+    font-weight: bold;
+    color: var(--primary-color)
+  }
+}
+
+.header,
+.dialog-message {
+  text-transform: lowercase;
+}
+
+.header::first-letter,
+.dialog-message::first-letter {
+  text-transform: uppercase;
+}
+
+.mat-dialog-actions{
+  display: flex;
+
+  button{
+    margin: auto;
+  }
+}
