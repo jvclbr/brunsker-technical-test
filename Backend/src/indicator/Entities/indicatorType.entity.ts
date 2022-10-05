@@ -19,9 +19,6 @@ import {
     description: string;
 
     @Column({ default: true })
-    isEnum: boolean;
-  
-    @Column({ default: true })
     active: boolean;
 
     @OneToMany(() => IndicatorEntity, indicator => indicator.indicatorType)

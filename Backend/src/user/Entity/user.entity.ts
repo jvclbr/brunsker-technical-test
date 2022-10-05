@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 
 import { IndicatorEntity } from '../../indicator/Entities/indicators.entity';
+import { RealEstateEntity } from '../../real-estate/Entity/real-estate.entity';
 import { HashPassword } from '../../utils/Services'
 
 @Entity()
@@ -40,6 +41,12 @@ export class UserEntity {
     },
   })
   roles: Promise<IndicatorEntity[]>;
+
+  @ManyToMany(() => RealEstateEntity)
+  @JoinTable({
+    name: 'user_real_estate_entity'
+  })
+  favList: Promise<RealEstateEntity[]>;
 }
 
 @EventSubscriber()

@@ -33,7 +33,6 @@ export class ViaCepService {
         const response = await this.viaCEP().get<ViaCepDTO>(`${cep}/json`).then(res => {
            return ViaCepSchema.parse(res.data)
         }).catch((err: any) => {
-            console.log(err)
             if(err instanceof AxiosError){
                 if(err.response.status === HttpStatus.TOO_MANY_REQUESTS){
                     throw new HttpException('Falha ao pesquisar o CEP informado', err.response.status)

@@ -16,7 +16,7 @@ import {
 } from '../../utils';
 import { IndicatorEntity, IndicatorTypesEnum } from '../../indicator';
 import { RolesEnum } from '../../auth';
-
+import { RealEstateDTO } from '../../real-estate';
 
 @Injectable()
 export class UserService {
@@ -75,7 +75,7 @@ export class UserService {
             });
 
             NewUserEntity.roles = Promise.resolve([
-                UserRole as IndicatorEntity
+                UserRole
             ])
 
             const NewUser = await this.userRepository.save(NewUserEntity);
@@ -268,6 +268,41 @@ export class UserService {
             }
 
             throw new HttpException(ActivateResponse, HttpStatus.BAD_REQUEST)        
+        }
+    }
+
+    public async addRealEstateToUserFavList(realEstateToAdd: RealEstateDTO, req: any): Promise<RealEstateDTO[]>{
+        try{
+            const CurrentUser = await this.getUserByIdProtected(req.user.id, req);
+            const FavList = await CurrentUser.favList;
+            if(FavList.filter(fav => fav.id === realEstateToAdd.id).length){
+                throw new HttpException(`O Imovel '${realEstateToAdd.id}' já esta na lista de favoritos do usuario '${CurrentUser.id}'`, HttpStatus.BAD_REQUEST)   
+            }
+            FavList.push(realEstateToAdd);
+            CurrentUser.favList = Promise.resolve(FavList);
+            await this.userRepository.save(CurrentUser);
+            return FavList
+        }
+        catch(err: any){
+            throw err
+        }
+    }
+
+    public async removeRealEstateToUserFavList(realEstateToAdd: RealEstateDTO, req: any): Promise<RealEstateDTO[]>{
+        try{
+            const CurrentUser = await this.getUserByIdProtected(req.user.id, req);
+            const FavList = await CurrentUser.favList;
+            const TargetRealEstateIndex = FavList.findIndex(fav => fav.id === realEstateToAdd.id);
+            if(TargetRealEstateIndex === -1){
+                throw new HttpException(`O Imovel '${realEstateToAdd.id}' não esta na lista de favoritos do usuario '${CurrentUser.id}'`, HttpStatus.BAD_REQUEST)   
+            }
+            FavList.splice(TargetRealEstateIndex, 1);
+            CurrentUser.favList = Promise.resolve(FavList);
+            await this.userRepository.save(CurrentUser);
+            return FavList
+        }
+        catch(err: any){
+            throw err
         }
     }
 

@@ -3,7 +3,6 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
-  OneToMany
 } from 'typeorm';
 import { IndicatorEntity } from '../../indicator/Entities/indicators.entity';
 

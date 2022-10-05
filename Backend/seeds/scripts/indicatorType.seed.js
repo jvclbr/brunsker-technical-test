@@ -12,6 +12,7 @@ class IndicatorTypeSeed {
         await this._createRoleType();
         await this._createUfType();
         await this._createLocalityType();
+        await this._createRealEstateType();
     }
     
     _createRoleType = async () => {
@@ -32,6 +33,13 @@ class IndicatorTypeSeed {
         await this._connectionRef.query(`
             INSERT OR IGNORE INTO indicator_type_entity (id, type, description, active)
             VALUES (${dbConstants.indicatorsTypes.LOCALITY}, 'Locality', 'Defines a Locality', 1)
+        `)
+    }
+
+    _createRealEstateType = async () => {
+        await this._connectionRef.query(`
+            INSERT OR IGNORE INTO indicator_type_entity (id, type, description, active)
+            VALUES (${dbConstants.indicatorsTypes.REAL_ESTATE_TYPE}, 'Real Estate Type', 'Defines a Real Estate Type', 1)
         `)
     }
 }

@@ -9,6 +9,7 @@ import { UserModule } from './user';
 import { AuthModule } from './auth';
 import { AddressModule } from './address';
 import { IndicatorModule } from './indicator';
+import { RealEstateModule } from './real-estate';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { IndicatorModule } from './indicator';
     UserModule,
     AuthModule,
     AddressModule,
+    RealEstateModule,
     IndicatorModule
   ],
   controllers: [AppController],
