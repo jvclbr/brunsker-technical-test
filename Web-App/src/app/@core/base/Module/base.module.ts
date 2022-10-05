@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxMaskModule } from 'ngx-mask'
 
+import { MaterialModule } from '../../material';
 import { ToastModule } from '../../toast';
 
 const NpmModules = [
@@ -17,6 +18,7 @@ const NpmModules = [
 ]
 
 const CustomModules = [
+  MaterialModule,
   ToastModule,
 ]
 
