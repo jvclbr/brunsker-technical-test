@@ -35,3 +35,11 @@ background-color: var(--warning);
   color: white;
   background-color: var(--success);
 }
+
+.tooltip {
+  background: var(--primary-color);
+}
+
+.simplebar-scrollbar::before {
+  background-color: var(--primary-color) !important;
+}

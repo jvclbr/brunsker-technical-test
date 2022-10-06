@@ -1,0 +1,24 @@
+<div *ngFor="let menuItem of ($menuItens | async)">
+  <div
+    class="menu"
+    matTooltipPosition="right"
+    [matTooltip]="menuItem.tooltip"
+    matTooltipClass="tooltip"
+    (click)="redirect(menuItem)"
+    [ngClass]="{'active': menuItem.module === activeModule}"
+  >
+    <mat-icon >{{menuItem.icon}}</mat-icon>
+  </div>
+</div>
+
+<mat-divider></mat-divider>
+
+<div
+  class="menu logout"
+  matTooltipPosition="right"
+  [matTooltip]="($logoutItem | async)?.tooltip ?? ''"
+  matTooltipClass="tooltip"
+  (click)="logout()"
+>
+  <mat-icon>{{($logoutItem | async)?.icon}}</mat-icon>
+</div>

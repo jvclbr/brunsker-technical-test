@@ -9,6 +9,11 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDividerModule } from '@angular/material/divider';
+
 
 const MaterialModules = [
   MatButtonModule,
@@ -20,7 +25,11 @@ const MaterialModules = [
   MatTabsModule,
   MatBadgeModule,
   MatAutocompleteModule,
-  MatSelectModule
+  MatSelectModule,
+  MatSidenavModule,
+  MatToolbarModule,
+  MatTooltipModule,
+  MatDividerModule
 ]
 
 @NgModule({

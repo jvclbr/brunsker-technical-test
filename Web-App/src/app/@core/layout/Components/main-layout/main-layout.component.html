@@ -1,2 +1,57 @@
-<p>main-layout works!</p>
-<router-outlet></router-outlet>
+<mat-sidenav-container fullscreen>
+
+  <mat-sidenav
+    [mode]="sideNavMode"
+    [opened]="openSideNav"
+    (openedStart)="setSideNavOpenState(true)"
+    (closedStart)="setSideNavOpenState(false)"
+  >
+    <app-side-nav-menu
+      (handleRedirect)="handleRedirect($event)"
+      (handleLogout)="handleLogout()"
+    >
+    </app-side-nav-menu>
+
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+
+    <mat-toolbar>
+
+      <div class="content">
+        <div *ngIf="($plataform | async) === PlataformEnum.MOBILE" class="toggle-buttons">
+          <button
+            mat-icon-button
+            *ngIf="!openSideNav"
+            (click)="setSideNavOpenState(true)"
+          >
+            <mat-icon class="close">chevron_right</mat-icon>
+          </button>
+
+          <button
+            mat-icon-button
+            *ngIf="openSideNav"
+            (click)="setSideNavOpenState(false)"
+          >
+            <mat-icon class="open">chevron_left</mat-icon>
+          </button>
+        </div>
+
+        <div class="user">
+          <div class="name">
+            <span>{{($user | async)?.name}}</span>
+          </div>
+          <ngx-avatar bgColor="#3F51B5" [name]="($user | async)?.name"></ngx-avatar>
+        </div>
+      </div>
+
+    </mat-toolbar>
+
+    <ngx-simplebar>
+      <router-outlet></router-outlet>
+    </ngx-simplebar>
+
+  </mat-sidenav-content>
+
+
+</mat-sidenav-container>

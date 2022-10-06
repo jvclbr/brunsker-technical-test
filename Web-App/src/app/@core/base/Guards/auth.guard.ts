@@ -20,17 +20,21 @@ export class AuthGuard implements CanActivateChild {
   ){}
 
   canActivateChild( route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean>{
-    const IsPublic = route.data['isPublic'] ?? false;
-
+    const IsPublic = route.data['isPublic'];
     return new Promise((res) => {
       this.authService.getAuthToken()
       .pipe(take(1))
       .subscribe(authToken => {
         const HasAuth = authToken ? true : false;
 
+        if(IsPublic === undefined){
+          res(false);
+          return
+        }
+
         if(IsPublic){
           if(HasAuth){
-            this.router.navigate([`/${RouteNamesEnum.REAL_ESTATE}`]);
+            this.router.navigate([`/${RouteNamesEnum.BASE}`]);
             res(false)
             return
           }

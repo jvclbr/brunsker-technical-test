@@ -6,11 +6,12 @@ import {
 import { FormBuilder, FormGroup } from '@ngneat/reactive-forms';
 import { Router } from '@angular/router';
 import { Validators } from '@angular/forms';
-import { take, Subscription } from 'rxjs';
+import { take, Subscription, Observable } from 'rxjs';
 import {
   PlataformService,
   PlataformEnum,
-  RouteNamesEnum
+  RouteNamesEnum,
+  PlataformTypes
 } from '../../../@core'
 import { AuthRouteNamesEnum } from '../../Routes/auth-route-names.enum';
 import { AuthService } from '../../Service';
@@ -25,7 +26,7 @@ export class SignInFormComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
   public signInForm!: FormGroup<SignInDTO>;
-  public currentPlattaform!: string;
+  public $plataform!:Observable<PlataformTypes>;
   public PlataformEnum = PlataformEnum;
   public hidePassword: boolean = true;
 
@@ -34,7 +35,10 @@ export class SignInFormComponent implements OnInit, OnDestroy {
     private readonly formBuilder: FormBuilder,
     private readonly plataformService: PlataformService,
     private readonly router: Router
-  ) {}
+  ) {
+    this.$plataform = this.plataformService.getPlataform();
+  }
+
   ngOnInit(): void {
     this.initForm();
     this.initSubscriptions();
@@ -45,13 +49,6 @@ export class SignInFormComponent implements OnInit, OnDestroy {
   }
 
   private initSubscriptions(){
-    this.subscriptions.add(this.plataformSubscription());
-  }
-
-  private plataformSubscription(): Subscription {
-    return this.plataformService.getPlataform().subscribe(plattaform => {
-      this.currentPlattaform = plattaform;
-    })
   }
 
   private initForm(){

@@ -1,0 +1,33 @@
+.menu{
+  display: flex;
+  align-items: center;
+  vertical-align: middle;
+  justify-content: center;
+  padding: 1em;
+  cursor: pointer;
+  transition: var(--fade-in-time);
+
+  mat-icon{
+    color: var(--item-color);
+    transition: var(--fade-in-time);
+  }
+}
+.menu:hover{
+  background-color: var(--item-container-hover-color);
+
+  mat-icon{
+    color: white;
+  }
+}
+
+.logout{
+  mat-icon{
+    color: var(--warn-color);
+  }
+}
+
+.active{
+  mat-icon{
+    color: white;
+  }
+}
