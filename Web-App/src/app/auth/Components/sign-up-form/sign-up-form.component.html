@@ -4,7 +4,7 @@
     <span class="title">SIGN UP</span>
   </div>
 
-  <div class="body" [ngStyle]="{'width': currentPlattaform !== PlataformEnum.MOBILE ? '30%' : '75%' }">
+  <div class="body" [ngStyle]="{'width': ($plataform | async) !== PlataformEnum.MOBILE ? '30%' : '75%' }">
 
       <mat-form-field appearance="outline">
         <input matInput formControlName="name" placeholder="Nome">

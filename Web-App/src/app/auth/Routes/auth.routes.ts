@@ -10,13 +10,16 @@ export const AuthRoutes: Routes = [
   {
     path: AuthRouteNamesEnum.BASE,
     component: AuthContainerComponent,
+    data: {isPublic: true},
     children: [
       {
         path: AuthRouteNamesEnum.SIGN_IN,
+        data: {isPublic: true},
         component: SignInFormComponent,
       },
       {
         path: AuthRouteNamesEnum.SIGN_UP,
+        data: {isPublic: true},
         component: SignUpFormComponent,
       },
       {
@@ -24,9 +27,5 @@ export const AuthRoutes: Routes = [
         redirectTo: AuthRouteNamesEnum.SIGN_IN
       }
     ]
-  },
-  {
-    path: '**',
-    redirectTo: AuthRouteNamesEnum.BASE
   }
 ]

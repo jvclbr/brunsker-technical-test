@@ -8,7 +8,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { InterceptorsModule, LayoutModule } from './@core';
 
-
 const Modules = [
   BrowserModule,
   HttpClientModule,

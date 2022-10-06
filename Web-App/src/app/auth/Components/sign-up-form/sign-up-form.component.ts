@@ -10,12 +10,13 @@ import {
   ValidationErrors,
   Validators
 } from '@angular/forms';
-import { Subscription, take } from 'rxjs';
+import { Observable, Subscription, take } from 'rxjs';
 import {
   PlataformService,
   PlataformEnum,
   validateSameString,
-  RouteNamesEnum
+  RouteNamesEnum,
+  PlataformTypes
 } from '../../../@core'
 import { AuthService } from '../../Service';
 import { SignUpDTO, SignInDTO } from '../../DTO';
@@ -31,7 +32,7 @@ export class SignUpFormComponent implements OnInit {
 
   private subscriptions = new Subscription();
   public signUpForm!: FormGroup<SignUpDTO>;
-  public currentPlattaform!: string;
+  public $plataform!:Observable<PlataformTypes>;
   public PlataformEnum = PlataformEnum;
   public hidePassword: boolean = true;
   public hidePasswordConfirm: boolean = true;
@@ -41,7 +42,9 @@ export class SignUpFormComponent implements OnInit {
     private readonly formBuilder: FormBuilder,
     private readonly plataformService: PlataformService,
     private readonly router: Router
-  ) { }
+  ) {
+    this.$plataform = this.plataformService.getPlataform();
+   }
 
   ngOnInit(): void {
     this.initForm();
@@ -53,13 +56,6 @@ export class SignUpFormComponent implements OnInit {
   }
 
   private initSubscriptions(){
-    this.subscriptions.add(this.plataformSubscription());
-  }
-
-  private plataformSubscription(): Subscription {
-    return this.plataformService.getPlataform().subscribe(plattaform => {
-      this.currentPlattaform = plattaform;
-    })
   }
 
   private initForm(){

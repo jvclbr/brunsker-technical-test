@@ -1,19 +1,21 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MainLayoutComponent } from '../Components';
-import { PlataformService } from '../Service';
+import { BaseModule } from '../../base';
+import { MainLayoutComponent, SideNavMenuComponent } from '../Components';
+import { PlataformService, MenuService } from '../Service';
 
 const Components = [
-  MainLayoutComponent
+  MainLayoutComponent,
+  SideNavMenuComponent
 ]
 
 const Providers = [
-  PlataformService
+  PlataformService,
+  MenuService
 ]
 
 const Modules = [
-  CommonModule,
+  BaseModule,
   RouterModule.forChild([])
 ]
 

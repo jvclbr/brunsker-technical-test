@@ -1,0 +1,86 @@
+mat-sidenav-container{
+  background-color: var(--main-bg-color);
+
+  mat-sidenav{
+    background-color: var(--primary-color);
+  }
+
+  mat-sidenav-content{
+
+    mat-toolbar{
+      background-color: var(--main-bg-color);
+      transition: height var(--transition-time);
+      height: var(--toolbar-size);
+
+      .content{
+        display: inline-flex;
+        width: 100%;
+      }
+
+      .toggle-buttons{
+
+        mat-icon{
+          color: var(--primary-color);
+          transition-property: transform;
+        }
+
+        .open{
+          transform:rotate(180deg);
+          animation:spin-left var(--spin-time) forwards;
+        }
+
+        .close{
+          transform:rotate(-180deg);
+          animation:spin-right var(--spin-time) forwards;
+        }
+
+        @keyframes spin-left {
+          100% {
+              -webkit-transform: rotate(360deg);
+              transform:rotate(360deg);
+          }
+        }
+
+        @keyframes spin-right {
+          100% {
+              -webkit-transform: rotate(-360deg);
+              transform:rotate(-360deg);
+          }
+        }
+      }
+
+      .user{
+
+        display: inline-flex;
+        margin-left: auto;
+        align-items: center;
+        justify-content: center;
+
+        .name{
+
+          border: 0.1em solid var(--primary-color);
+          border-radius: 1em;
+          padding: 0 0.5em 0;
+
+          span{
+            padding: 0.5em;
+            font-weight: bold;
+            color: var(--primary-color)
+          }
+        }
+
+        ngx-avatar{
+          cursor: pointer;
+          padding: 0 0.5em 0;
+        }
+
+      }
+    }
+
+    ngx-simplebar{
+      background-color: var(--main-bg-color);
+      height: calc(100vh - var(--toolbar-size));
+    }
+
+  }
+}
