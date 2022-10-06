@@ -1,0 +1,4 @@
+export enum AuthCookieEnum {
+  AUTH_TOKEN = 'AUTH_TOKEN',
+  AUTH_TOKEN_EXPIRES_IN = 'AUTH_TOKEN_EXPIRES_IN'
+}

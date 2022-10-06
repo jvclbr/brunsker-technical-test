@@ -28,7 +28,7 @@ export abstract class BaseService<T> {
     protected readonly router: Router
   ){}
 
-  protected getAll(): Observable<APIArrayResponseDTO<T[]>>{
+  public getAll(): Observable<APIArrayResponseDTO<T[]>>{
     const APIResponse = new ReplaySubject<APIArrayResponseDTO<T[]>>();
 
     this.httpClient.get<APIArrayResponseDTO<T[]>>(`${API_URL}/${this.apiPath}`)
@@ -48,7 +48,7 @@ export abstract class BaseService<T> {
     return APIResponse.asObservable();
   }
 
-  protected getAllForUser(): Observable<APIArrayResponseDTO<T[]>>{
+  public getAllForUser(): Observable<APIArrayResponseDTO<T[]>>{
     const APIResponse = new ReplaySubject<APIArrayResponseDTO<T[]>>();
 
     this.httpClient.get<APIArrayResponseDTO<T[]>>(`${API_URL}/${this.apiPath}/user`)
@@ -68,7 +68,7 @@ export abstract class BaseService<T> {
     return APIResponse.asObservable();
   }
 
-  protected getById(dataId: number): Observable<APIResponseDTO<T>>{
+  public getById(dataId: number): Observable<APIResponseDTO<T>>{
     const APIResponse = new ReplaySubject<APIResponseDTO<T>>();
 
     this.httpClient.get<APIResponseDTO<T>>(`${API_URL}/${this.apiPath}/${dataId}`)
@@ -87,7 +87,7 @@ export abstract class BaseService<T> {
     return APIResponse.asObservable();
   }
 
-  protected create(newData: T): Observable<APIResponseDTO<T>>{
+  public create(newData: T): Observable<APIResponseDTO<T>>{
     const APIResponse = new ReplaySubject<APIResponseDTO<T>>();
 
     this.httpClient.post<APIResponseDTO<T>>(`${API_URL}/${this.apiPath}`, newData)
@@ -110,7 +110,7 @@ export abstract class BaseService<T> {
     return APIResponse.asObservable();
   }
 
-  protected update(dataToUpdate: T, dataId: number){
+  public update(dataToUpdate: T, dataId: number){
     const APIResponse = new ReplaySubject<APIResponseDTO<APIFeedbackResponseDTO>>();
 
     this.httpClient.put<APIResponseDTO<APIFeedbackResponseDTO>>(`${API_URL}/${this.apiPath}/${dataId}`, dataToUpdate)
@@ -133,7 +133,7 @@ export abstract class BaseService<T> {
     return APIResponse.asObservable();
   }
 
-  protected deactivate(dataId: number): Observable<APIResponseDTO<APIFeedbackResponseDTO>>{
+  public deactivate(dataId: number): Observable<APIResponseDTO<APIFeedbackResponseDTO>>{
     const APIResponse = new ReplaySubject<APIResponseDTO<APIFeedbackResponseDTO>>();
 
     this.httpClient.put<APIResponseDTO<APIFeedbackResponseDTO>>(`${API_URL}/${this.apiPath}/deactivate/${dataId}`, null)
@@ -153,7 +153,7 @@ export abstract class BaseService<T> {
     return APIResponse.asObservable();
   }
 
-  protected activate(dataId: number): Observable<APIResponseDTO<APIFeedbackResponseDTO>>{
+  public activate(dataId: number): Observable<APIResponseDTO<APIFeedbackResponseDTO>>{
     const APIResponse = new ReplaySubject<APIResponseDTO<APIFeedbackResponseDTO>>();
 
     this.httpClient.put<APIResponseDTO<APIFeedbackResponseDTO>>(`${API_URL}/${this.apiPath}/activate/${dataId}`, null)
@@ -173,7 +173,7 @@ export abstract class BaseService<T> {
     return APIResponse.asObservable();
   }
 
-  protected delete(dataId: number): Observable<APIResponseDTO<APIFeedbackResponseDTO>>{
+  public delete(dataId: number): Observable<APIResponseDTO<APIFeedbackResponseDTO>>{
     const APIResponse = new ReplaySubject<APIResponseDTO<APIFeedbackResponseDTO>>();
 
     this.httpClient.delete<APIResponseDTO<APIFeedbackResponseDTO>>(`${API_URL}/${this.apiPath}/${dataId}`)
