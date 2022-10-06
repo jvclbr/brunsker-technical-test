@@ -1,12 +1,18 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { RouteNamesEnum, MainLayoutComponent } from './@core';
+import {
+  RouteNamesEnum,
+  MainLayoutComponent,
+} from './@core';
+import { AuthGuard } from './@core/base/Guards';
 import { AuthModule } from './auth';
 import { RealEstateModule } from './real-estate';
 
 const routes: Routes = [
   {
     path: RouteNamesEnum.AUTH,
+    canActivateChild: [AuthGuard],
+    data: {isPublic: true},
     loadChildren: () => AuthModule
   },
   {
@@ -15,6 +21,8 @@ const routes: Routes = [
     children: [
       {
         path: RouteNamesEnum.BASE,
+        canActivateChild: [AuthGuard],
+        data: {isPublic: false},
         loadChildren: () => RealEstateModule
       }
     ]

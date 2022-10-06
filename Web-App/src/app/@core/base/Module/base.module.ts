@@ -25,8 +25,6 @@ const Modules = [
   ...CustomModules
 ]
 
-
-
 @NgModule({
   imports: [
     ...Modules

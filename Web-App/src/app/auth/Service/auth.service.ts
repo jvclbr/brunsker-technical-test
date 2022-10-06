@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import {
   Observable,
+  BehaviorSubject,
   ReplaySubject,
   take
 } from 'rxjs';
@@ -13,7 +14,8 @@ import {
   RouteNamesEnum,
   APIResponseDTO,
   ToastService,
-  ToastEnum
+  ToastEnum,
+  HttpHeadersEnum
 } from '../../@core';
 import { SignInDTO, SignInResponseDTO } from '../DTO';
 import { AuthCookieEnum } from '../Enums';
@@ -24,10 +26,10 @@ import { UserService } from '../../user/Service/user.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService extends BaseService<any>{
+export class AuthService extends BaseService<SignInDTO>{
   protected readonly apiPath:string = APIRouteNamesEnum.AUTH;
   protected readonly mainPath:string = RouteNamesEnum.AUTH;
-  private authToken: ReplaySubject<string> = new ReplaySubject<string>();
+  private authToken: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   constructor(
     protected override readonly httpClient: HttpClient,
@@ -40,6 +42,8 @@ export class AuthService extends BaseService<any>{
       httpClient,
       router
     );
+
+    this.setInitialAuthToken();
   }
 
   public signIn(credentials: SignInDTO): Observable<APIResponseDTO<SignInResponseDTO>>{
@@ -69,10 +73,14 @@ export class AuthService extends BaseService<any>{
     return APIResponse.asObservable();
   }
 
-  public refresh(): Observable<APIResponseDTO<SignInResponseDTO>>{
+  public refresh(showToast: boolean = true): Observable<APIResponseDTO<SignInResponseDTO>>{
     const APIResponse = new ReplaySubject<APIResponseDTO<SignInResponseDTO>>();
-
-    this.httpClient.get<APIResponseDTO<SignInResponseDTO>>(`${this.API_URL}/${this.apiPath}/refresh`)
+    this.httpClient.get<APIResponseDTO<SignInResponseDTO>>(`${this.API_URL}/${this.apiPath}/refresh`,{
+      headers: {
+        Authorization: `Bearer ${this.getAuthTokenFromCookie()}`,
+        [HttpHeadersEnum.SKIP_AUTH_INTERCEPTOR] : 'true'
+      }
+    })
     .pipe(take(1))
     .subscribe({
       next: (res) => {
@@ -80,12 +88,14 @@ export class AuthService extends BaseService<any>{
           this.setAuthToken(res.data.authToken, res.data.expiresIn);
           this.setUser(res.data.user);
           APIResponse.next(res);
-          this.toastService.showToast({
-            data: {
-              content: `Bem Vindo ao sistema ${res.data.user.name}`
-            },
-            type: ToastEnum.SUCCESS
-          })
+          if(showToast){
+            this.toastService.showToast({
+              data: {
+                content: `Bem Vindo ao sistema ${res.data.user.name}`
+              },
+              type: ToastEnum.SUCCESS
+            })
+          }
         }
       },
       error: (err) => {
@@ -101,45 +111,63 @@ export class AuthService extends BaseService<any>{
     return this.userService.create(sigInData)
   }
 
-  public logout(){
+  public logout(): void{
     this.cookieService.delete(AuthCookieEnum.AUTH_TOKEN, '/');
     this.cookieService.delete(AuthCookieEnum.AUTH_TOKEN_EXPIRES_IN, '/');
     this.userService.clearLoggedUserFromStorage();
     this.router.navigate([`/${RouteNamesEnum.AUTH}`]);
-    this.authToken =  new ReplaySubject();
+    this.authToken.next('');
   }
 
-  private setUser(loggedUser: UserDTO){
+  private setUser(loggedUser: UserDTO): void{
     this.userService.setLoggedUser(loggedUser);
   }
 
-  private setAuthToken(authToken: string, expiresIn?: number){
+  private setAuthToken(authToken: string, expiresIn?: number): void {
     const ExpirationDate = new Date().getTime() + ((expiresIn || 0) * 1000);
     this.cookieService.set(AuthCookieEnum.AUTH_TOKEN, authToken, { expires: new Date(ExpirationDate), path: '/' });
     this.cookieService.set(AuthCookieEnum.AUTH_TOKEN_EXPIRES_IN, `${ExpirationDate}`, { expires: new Date(ExpirationDate), path: '/' });
     this.authToken.next(authToken);
   }
 
-  public getAuthTokenObservable(): Observable<string>{
+  public getAuthToken(): Observable<string>{
     return this.authToken.asObservable();
   }
 
-  private getAuthToken(): string | null{
+  private getAuthTokenFromCookie(): string{
+    const AuthToken = this.cookieService.get(AuthCookieEnum.AUTH_TOKEN);
+    return AuthToken
+  }
+
+  private setInitialAuthToken(): void{
+    const AuthToken = this.getAuthTokenFromCookie();
+    if(AuthToken){
+      this.authToken.next(AuthToken);
+    }
+  }
+
+  public checkIfAuthTokenShouldRefresh(): boolean{
     const HasToken = this.cookieService.check(AuthCookieEnum.AUTH_TOKEN);
     const HasExpireDate = this.cookieService.check(AuthCookieEnum.AUTH_TOKEN_EXPIRES_IN);
 
     if(HasToken && HasExpireDate){
       const ExpireDate = Number(this.cookieService.get(AuthCookieEnum.AUTH_TOKEN_EXPIRES_IN));
 
-      if(ExpireDate < new Date().getTime()){
+      const TimeDifference = ExpireDate - new Date().getTime();
+      const TimeDifferenceInMinutes = TimeDifference/60000;
+      const RefreshTargetInMinutes = 15;
+
+      if(TimeDifferenceInMinutes <= 0){
         this.logout();
-        return null
+        return false
+      }
+      else if(TimeDifferenceInMinutes <= RefreshTargetInMinutes){
+        return true
       }
 
-      const AuthToken = this.cookieService.get(AuthCookieEnum.AUTH_TOKEN);
-      return AuthToken
+      return false
     }
 
-    return null
+    return false
   }
 }

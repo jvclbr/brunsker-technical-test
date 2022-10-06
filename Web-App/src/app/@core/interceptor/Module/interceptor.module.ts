@@ -4,7 +4,11 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { LoadingSpinnerComponent } from '../Components';
 import { InterceptorService } from '../Service';
-import { AuthInterceptor, ErrorInterceptor, LoadingInterceptor } from '../Interceptors';
+import {
+  AuthInterceptor,
+  ErrorInterceptor,
+  LoadingInterceptor
+} from '../Interceptors';
 
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule } from '@angular/material/dialog';
